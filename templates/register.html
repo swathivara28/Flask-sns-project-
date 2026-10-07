@@ -8,7 +8,7 @@
 <body>
 {% block navmenu %}
     <a href="/login">Login</a>
-    <a href="/register">Register</a>
+   <a href="/register">Register</a>
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
         <p>create account to manage your notes and files</p>
 
         <div>
-            <form action="">
+            <form action="/register"method="POST">
                 <div>
                     <label for="username">Username</label>
                     <input type="text" name="username" id="">
@@ -35,9 +35,11 @@
                     <input type="password" name="confirm_password" id="">
                 </div>
                 <div>
-                    <button type = "sumit">Submit</button>
+                    <button type="submit">Submit</button>
                 </div>
-                <p>Don't Know password?<a href="/register">Forgot password</a></p>
+                <p>
+                    Don't know password <a href="#">Forget password</a>                                            
+                </p>
             </form>
         </div>
     </div>

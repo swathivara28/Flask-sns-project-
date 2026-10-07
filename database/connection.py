@@ -1,8 +1,6 @@
 import mysql.connector as SQLC
 
-
 def DatabaseConnection():
-
     try:
         db_config = SQLC.connect(
             host="localhost",
@@ -10,8 +8,8 @@ def DatabaseConnection():
             password="root",
             database="sns_management2"
         )
-
         return db_config
 
     except Exception as e:
-        return f"Something wrong in database/connection.py: {e}"
+        print(f"Something wrong in database/connection.py: {e}")
+        return None
