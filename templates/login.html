@@ -1,22 +1,23 @@
 {% extends "base.html" %}
-
+<title>
     {% block title %}
         Login
     {% endblock %}
+</title>
 
+<body>
 {% block navmenu %}
     <a href="/login">Login</a>
-   <a href="/register">Register</a>
+    <a href="/register">Register</a>
 {% endblock %}
 
 {% block content %}
     <div>
         <h2>Login</h2>
-        <p>login to account to manage your notes and files</p>
+        <p>Login to account to manage your notes and files</p>
 
         <div>
-            <form action="">
-                
+            <form action="/login" method="POST">
                 <div>
                     <label for="email">Email</label>
                     <input type="email" name="email" id="">
@@ -26,12 +27,12 @@
                     <input type="password" name="password" id="">
                 </div>
                 <div>
-                    <button type="submit">Submit</button>
+                    <button type = "submit">Submit</button>
                 </div>
-                <p>
-                    Don't have account? <a href="/register">Register</a>                                            
-                </p>
+                <p>Don't have account?<a href="/register">Register</a></p>
+                <p>Don't know password?<a href="/forgot-password">Forgot-password</a></p>
             </form>
         </div>
     </div>
 {% endblock %}
+</body>
