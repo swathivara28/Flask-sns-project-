@@ -21,9 +21,8 @@ def sendEmail(to_email: str, subject: str, body: str):
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     try:
-        server = smtplib.SMTP(
-            host=SMTP_SERVER,
-            port=SMTP_PORT
+        server = smtplib.SMTP(host=SMTP_SERVER,
+                              port=SMTP_PORT
         )
         server.starttls()
         server.login(
@@ -69,5 +68,20 @@ class EmailTemplates:
         Thank you
         
         Besh whises,
+        SNS Management"""
+        return template
+
+    # forgot password template
+    @staticmethod
+    def forgotPasswordTemplate(url:str,username:str="User"):
+        template =f"""Hello {username},
+        To manage your files and notes,first reset password and login with new password.
+        
+        your Reset password link: {url}
+        
+        If it is not done by you simple ignore this email.
+        Thanks for choosing sns app.
+        
+        Regards
         SNS Management"""
         return template

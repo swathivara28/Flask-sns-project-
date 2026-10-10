@@ -1,12 +1,30 @@
-from flask import Flask, render_template, request,redirect,session
+from flask import Flask, render_template, request,redirect,session,url_for
 
 from database import createTables,AuthQueries
 import random
 from  utils import EmailTemplates,sendEmail
 from utils import generateHashPassword, validateHashPassword
+from itsdangerous import URLSafeTimedSerializer,SignatureExpired,BadTimeSignature #it is used to generate tokens
 
 app = Flask(__name__)
-app.secret_key = "bhavani@123"
+app.secret_key = "swathi@123"
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+# geterate token
+def generateToken(email:str):
+    token = serializer.dumps(obj=email,salt="reset-password")
+    return token
+# validate token
+def validateToken(token):
+    try:
+       data = serializer.loads(token,salt="reset-password",max_age=600) # 10 mins
+       return data
+    except BadTimeSignature:
+        print("Time Expired")
+        return redirect('/login')
+    except SignatureExpired:
+        print("Invalid url")
+        return redirect('/login')
 
 # home route
 @app.route('/')
@@ -110,15 +128,52 @@ def verifyotp():
 def forgot_password():
     if request.method =='GET':
         return render_template('forgot_password.html') 
+    if request.method =='POST':
+        email = request.form.get('email')
+        status,msg = AuthQueries.checkEmailExists(email = email)
+        if status == False:
+            print(msg)
+            return redirect(url_for('login'))
+        # generate email token
+        token = generateToken(email=email)
+        # generate reset password link
+        reset_link = url_for('reset_password',token=token,_external=True)
+        # send link via email
+        body = EmailTemplates.forgotPasswordTemplate(url=reset_link)
+        status,msg = sendEmail(to_email=email,
+                               subject="Reset Password-SNS",
+                               body= body)
+        if status == False:
+            print(msg)
+            return redirect(url_for('forgot_password'))
+        print(msg)
+        return redirect(url_for('login'))
+        # redirect to login page
 
-    
-
-
+@app.route('/reset-password/<token>', methods= ['GET','POST'])    
+def reset_password(token):
+    # validate token
+    email = validateToken(token=token)
+    if request.method == 'GET':
+        return render_template('reset_password.html',token_val=token)
+    if request.method== 'POST':
+        new_password= request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        # match np and cp
+        if new_password!= confirm_password:
+            print("Password miss match")
+            return redirect(url_for('rest_password',token=token))
+        # generate hash password
+        hash_password = generateHashPassword(password=new_password)
+        # update hash password in database by using email
+        status,msg = AuthQueries.updatePassword(email=email,hash_password=hash_password)
+        print(msg)
+        return f"<h2>{msg}</h2>"
+        # return msg like " password update successfully"
 # dashboard
 @app.route('/dashboard')
-def dashboard():   
+def dashboard():
     return "This is dashboard page"
-
 # main
 if __name__ == "__main__":
     print(createTables())
