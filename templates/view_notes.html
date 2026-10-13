@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+    {% block title %}
+        View Notes page 
+    {% endblock %}
+{% block navmenu %}
+   <a href="/dashboard">Home</a>
+   <a href="#">Files</a>
+   <a href="/dashboard/notes">Notes</a>
+   <a href="#">Profile</a>
+   <a href="#">Logout</a>
+{% endblock %}
+
+{% block content %}
+   <div>
+       <div>
+           <h2>View Notes</h2>
+       </div>
+       <div>
+           <h2>Welcome {{ username }}</h2>
+           <p>
+               start creating new notes to manage your notes
+           </p>
+           <button><a href="{{ url_for('mynotes')}}">Back</a></button>
+           <div>
+                <div><strong>Title:</strong>{{ title }}</div>
+                <div><strong>Content:</strong>{{ content }}</div>
+           </div>
+       </div>
+   </div>
+
+{% endblock %}
+

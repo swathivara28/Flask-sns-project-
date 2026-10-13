@@ -183,7 +183,9 @@ def dashboard():
 #=================================================================================
 @app.route('/dashboard/notes')
 def mynotes():
-    return render_template('notes.html')
+    userid = session['id']
+    status, all_notes = NotesQueries.getAllNotes(userid=userid)
+    return render_template('notes.html', notes = all_notes)
 
 ## new notes
 @app.route('/dashboard/notes/new_notes', methods=['GET','POST'])
@@ -194,29 +196,26 @@ def new_notes():
         title = request.form.get('title')
         content=request.form.get('content')
         userid = session['id']
-
         # Validate input
         if not title or not content:
             return "Please enter title and content"
-
         # Store notes in database
-        status, message = NotesQueries.insertNotesRecord(
+        status, msg = NotesQueries.insertNotesRecord(
             userid=userid,
             title=title,
-            content=content
-        )
+            content=content)
+        print(msg)
+        return redirect('/dashboard/notes')
 
-        if status:
-            return redirect('/dashboard/notes')
-
-        return message
-
-
-if __name__ == "__main__":
-    print(createTables())
-    app.run(debug=True)
-
-
+# view notes
+@app.route('/dashboard/notes/view/<int:id>')
+def view_notes(id):
+    # get notes by notes id
+    status, note = NotesQueries.getAllNotes(userid = session['id'], notesid=id)
+    return render_template('view_notes.html',
+                            title=note['title'], 
+                            content=note['content'])
+       
 # main
 if __name__ == "__main__":
     print(createTables())
