@@ -76,3 +76,40 @@ class AuthQueries:
                 cursor.close()
             if db_config:
                 db_config.close()
+
+
+
+# notes queries
+# Notes Queries
+class NotesQueries:
+
+    @staticmethod
+    def insertNotesRecord(userid: int, title: str, content: str):
+        db_config = None
+        cursor = None
+
+        try:
+            db_config = DatabaseConnection()
+            cursor = db_config.cursor()
+
+            query = """
+                INSERT INTO notes (userid, title, content)
+                VALUES (%s, %s, %s)
+            """
+
+            cursor.execute(query, (userid, title, content))
+            db_config.commit()
+
+            return True, "Notes added successfully"
+
+        except Exception as e:
+            if db_config:
+                db_config.rollback()
+
+            return False, f"something wrong in database/utilsDB.py-NOtesQueries.insertNotesRecord(): {e}"
+
+        finally:
+            if cursor:
+                cursor.close()
+            if db_config:
+                db_config.close()

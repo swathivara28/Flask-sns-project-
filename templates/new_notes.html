@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+    {% block title %}
+        New Notes page 
+    {% endblock %}
+{% block navmenu %}
+   <a href="/dashboard">Home</a>
+   <a href="#">Files</a>
+   <a href="/dashboard/notes">Notes</a>
+   <a href="#">Profile</a>
+   <a href="#">Logout</a>
+{% endblock %}
+
+{% block content %}
+   <div>
+       <div>
+           <h2>New Notes</h2>
+       </div>
+       <div>
+           <h4>Welcome {{ username }}</h4>
+           <p>Here you can creating new notes</p>
+       </div>
+       
+           <div>
+             <form action="{{ url_for('new_notes')}}" method="POST">
+
+                <label for="title">Title</label>
+                <input type="text" name="title" id="">
+            </div>
+            <div>
+                <label for="content">Content</label>
+                <textarea name="content" id=""></textarea>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>          
+       </div>
+       <div>
+            {% if notes %}
+                <p></p>
+            {% else %}
+                <p><i>Start adding your first notes by click on add notes</i></p>
+            {% endif %}
+                
+       </div>
+   </div>
+</form>
+{% endblock %}
+

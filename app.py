@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request,redirect,session,url_for
 
-from database import createTables,AuthQueries
+from database import createTables,AuthQueries,NotesQueries
 import random
 from  utils import EmailTemplates,sendEmail
 from utils import generateHashPassword, validateHashPassword
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired,BadTimeSignature #it is used to generate tokens
-
+ 
 app = Flask(__name__)
 app.secret_key = "swathi@123"
 serializer = URLSafeTimedSerializer(app.secret_key)
@@ -54,6 +54,9 @@ def login():
             print("Password incorrect")
             return redirect('/login')
         # redirect to dashboard page
+        session.clear()
+        session['id'] = user['userid']
+        session['username'] = user['username']
         return redirect('/dashboard')
 
         
@@ -173,7 +176,47 @@ def reset_password(token):
 # dashboard
 @app.route('/dashboard')
 def dashboard():
-    return "This is dashboard page"
+    return render_template('dashboard.html',username = session['username'])
+
+#=================================================================================
+#                             Notes Routes
+#=================================================================================
+@app.route('/dashboard/notes')
+def mynotes():
+    return render_template('notes.html')
+
+## new notes
+@app.route('/dashboard/notes/new_notes', methods=['GET','POST'])
+def new_notes():
+    if request.method == 'GET':
+        return render_template('new_notes.html')
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content=request.form.get('content')
+        userid = session['id']
+
+        # Validate input
+        if not title or not content:
+            return "Please enter title and content"
+
+        # Store notes in database
+        status, message = NotesQueries.insertNotesRecord(
+            userid=userid,
+            title=title,
+            content=content
+        )
+
+        if status:
+            return redirect('/dashboard/notes')
+
+        return message
+
+
+if __name__ == "__main__":
+    print(createTables())
+    app.run(debug=True)
+
+
 # main
 if __name__ == "__main__":
     print(createTables())
