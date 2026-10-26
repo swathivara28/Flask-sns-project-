@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Upload Files
+{% endblock %}
+
+{% block navmenu %}
+    <a href="/dashboard">Home</a>
+    <a href="/dashboard/files">Files</a>
+    <a href="/dashboard/notes">Notes</a>
+    <a href="#">Profile</a>
+    <a href="/logout">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+<div style="text-align: center;">
+    <h2>Upload My Files</h2>
+    <p>Here you can manage your files.</p>
+
+    <form action="{{ url_for('upload_file') }}"
+          method="POST"
+          enctype="multipart/form-data">
+
+        <div>
+            <label for="file">Upload File</label>
+            <input type="file" name="file" id="file" required>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button type="submit">Upload</button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

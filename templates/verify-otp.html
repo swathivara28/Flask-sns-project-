@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-
+<title>
     {% block title %}
         Verify OTP
     {% endblock %}
-
+</title>
 
 
 {% block navmenu %}
     <a href="/login">Login</a>
-   <a href="/register">Register</a>
+    <a href="/register">Register</a>
 {% endblock %}
 
 {% block content %}
@@ -17,17 +17,14 @@
         <p>Verify your account to manage your notes and files</p>
 
         <div>
-            <form action="/verify-otp"method='POST'>
-                
+            <form action="/verify-otp" method="POST">
                 <div>
                     <label for="otp">OTP</label>
                     <input type="number" name="otp" id="">
-                </div>
-                
+                </div>              
                 <div>
-                    <button type="submit">Submit</button>
+                    <button type = "submit">Submit</button>
                 </div>
-               
             </form>
         </div>
     </div>

@@ -1,97 +1,62 @@
-
 {% extends "base.html" %}
 
-{% block title %}
-    Notes Page
-{% endblock %}
+    {% block title %}
+        Notes
+    {% endblock %}
+
+
 
 {% block navmenu %}
     <a href="/dashboard">Home</a>
     <a href="#">Files</a>
     <a href="/dashboard/notes">Notes</a>
     <a href="#">Profile</a>
-    <a href="#">Logout</a>
+    <a href="/logout">Log out</a>
 {% endblock %}
 
 {% block content %}
     <div style="text-align: center;">
-
-        <div>
-            <h2>SNS Notes</h2>
-        </div>
-
-        <div>
-            <h4>Welcome {{ username }}</h4>
-            <p>
-                Here you can manage your notes.
-                Start by creating your first note.
-            </p>
-        </div>
-
-        <div>
-            <button>
-                <a href="/dashboard/notes/new_notes">New Notes</a>
-            </button>
-        </div>
-
-        <div>
+       <div>
+        <h2>SNS Notes</h2>
+       </div>
+       <div>
+        <p>here you can manage your notes start by creating first notes</p>
+       </div>
+       <div>
+         <div>
+            <button><a href="{{ url_for('new_notes') }}">New Notes</a></button>
+           
+         </div>
+         <div>
             {% if notes %}
-
                 {% for note in notes %}
-
+                <div>
                     <div>
-                        <div>
-                            <strong>Title:</strong>
-                            {% if note['title']|length > 100 %}
-                               {{ note['title'][:100] + "...." }}
-                            {% else %}
-                               {{ note['title'] }}
-                            {% endif %}
-                        </div>
-
-                        <div>
-                            <strong>Content:</strong>
-                            {% if note['content']|length > 100 %}
-                               {{ note['content'][:100] +"...." }}
-                            {% else %}
-                                 {{ note['content'] }}
-                            {% endif %}
-                        </div>
-
-                        <div>
-                            <button>
-                                <a href="/dashboard/notes/view/{{ note['notesid'] }}">
-                                    View
-                                </a>
-                            </button>
-
-                            <button>
-                                <a href="#">
-                                    Edit
-                                </a>
-                            </button>
-
-                            <button>
-                                <a href="#">
-                                    Delete</a>
-                            </button>
-                        </div>
+                        <strong>Title:</strong>
+                        {{ note.title }}
                     </div>
+                    <div>
+                        <strong>Content:</strong>
 
-                    <hr>
+                        {% if note.content|length > 100 %}
+                                {{ note.content[:100] }}....
+                        {% else %}
+                                {{ note.content }}
+                        {% endif %}
 
+                    </div>
+                    <div>
+                        <button><a href="/dashboard/notes/view/{{ note.notesid }}">view</a></button>
+                        <button><a href="/dashboard/notes/update/{{ note.notesid }}">Edit</a></button>
+                        <button><a href="{{ url_for('delete_notes', notesid=note.notesid) }}">Delete</a></button>
+                    </div>
+                    </div>
                 {% endfor %}
-
             {% else %}
-
-                <p>
-                    <i>
-                        Start creating your first notes by clicking on New Notes.
-                    </i>
-                </p>
-
+                <p><i>Start creating your first note by click on new notes</i></p>
             {% endif %}
-        </div>
-
+         </div>
+       </div>
+       
     </div>
 {% endblock %}

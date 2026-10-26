@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Files
+{% endblock %}
+
+{% block navmenu %}
+    <a href="/dashboard">Home</a>
+    <a href="/dashboard/files">Files</a>
+    <a href="/dashboard/notes">Notes</a>
+    <a href="#">Profile</a>
+    <a href="/logout">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+<div style="text-align: center;">
+    <h2>SNS My Files</h2>
+    <p>Here you can manage your files.</p>
+
+    <a href="{{ url_for('upload_file') }}">
+        <button type="button">Upload New File</button>
+    </a>
+</div>
+
+<div style="text-align: center;">
+    {% if files %}
+        {% for file in files %}
+
+            <div style="border: 1px solid black; padding: 10px; margin: 10px auto; max-width: 500px;">
+                <strong>File Name:</strong>
+                {{ file.originalname }}
+
+                <div style="margin-top: 10px;">
+                    <a href="/dashboard/files/view/{{ file.fileid }}" target="_blank">
+                        <button type="button">View</button>
+                    </a>
+
+                    <a href="/dashboard/files/download/{{ file.fileid }}">
+                        <button type="button">Download</button>
+                    </a>
+
+                    <a href="/dashboard/files/delete/{{ file.fileid }}">
+                        <button type="button">Delete</button>
+                    </a>
+                </div>
+            </div>
+
+        {% endfor %}
+    {% else %}
+        <p>Your uploaded files will appear here.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
