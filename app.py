@@ -100,10 +100,10 @@ def register():
         status, msg = AuthQueries.checkEmailExists(email=email)
 
         if status == True:
-            print(msg)
+            flash(msg)
             return redirect('/login')
 
-        print(msg)
+        flash(msg)
 
         # Generate OTP
         otp = random.randint(1000, 9999)
@@ -122,7 +122,7 @@ def register():
         )
 
         if status == False:
-            print(msg)
+            flash(msg)
             return redirect('/register')
 
         # Store data in session
@@ -217,11 +217,33 @@ def reset_password(token):
     
 
 #dashboard
+
 @app.route("/dashboard")
 def dashboard():
     if 'id' not in session:
-        return redirect('/login')
-    return render_template("dashboard.html",username=session['username'])
+        return redirect(url_for('login'))
+
+    userid = session['id']
+
+    # Total Notes count
+    status_notes, total_notes = NotesQueries.getNotesCount(userid)
+
+    if not status_notes:
+        return str(total_notes), 500
+
+    # Total Files count
+    status_files, total_files = FilesQueries.getFilesCount(userid)
+
+    if not status_files:
+        return str(total_files), 500
+
+    return render_template(
+        "dashboard.html",
+        username=session['username'],
+        total_notes=total_notes,
+        total_files=total_files
+    )
+
 
 #============================================================
 #                       Notes Routes

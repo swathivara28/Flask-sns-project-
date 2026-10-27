@@ -177,6 +177,33 @@ class NotesQueries:
             if db_config:
                 db_config.close()
 
+    
+    @staticmethod
+    def getNotesCount(userid: int):
+        db_config = None
+        cursor = None
+
+        try:
+            db_config = DatabaseConnection()
+            cursor = db_config.cursor()
+
+            query = "SELECT COUNT(*) FROM notes WHERE userid = %s"
+            cursor.execute(query, (userid,))
+            count = cursor.fetchone()[0]
+
+            return True, count
+
+        except Exception as e:
+            return False, str(e)
+
+        finally:
+            if cursor:
+                cursor.close()
+            if db_config:
+                db_config.close()
+
+
+
  #file queries   
 class FilesQueries:
 
@@ -314,3 +341,27 @@ class FilesQueries:
                 cursor.close()
             if db_config:
                 db_config.close()
+
+    @staticmethod
+    def getFilesCount(userid: int):
+            db_config = None
+            cursor = None
+    
+            try:
+                db_config = DatabaseConnection()
+                cursor = db_config.cursor()
+    
+                query = "SELECT COUNT(*) FROM files WHERE userid = %s"
+                cursor.execute(query, (userid,))
+                count = cursor.fetchone()[0]
+    
+                return True, count
+    
+            except Exception as e:
+                return False, str(e)
+    
+            finally:
+                if cursor:
+                    cursor.close()
+                if db_config:
+                    db_config.close()
